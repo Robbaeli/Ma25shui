@@ -1,0 +1,82 @@
+service: shui
+
+frameworkVersion: "4"
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  region: eu-north-1
+  stage: dev
+
+  environment:
+    USERS_TABLE: ${self:service}-${sls:stage}-Users
+    POSTS_TABLE: ${self:service}-${sls:stage}-Posts
+    COMMENTS_TABLE: ${self:service}-${sls:stage}-Comments
+    JWT_SECRET: ${env:JWT_SECRET}
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:BatchWriteItem
+          Resource:
+            - Fn::GetAtt: [UsersTable, Arn]
+            - Fn::GetAtt: [PostsTable, Arn]
+            - Fn::GetAtt: [CommentsTable, Arn]
+
+functions:
+  hello:
+    handler: src/handlers/hello.handler
+    events:
+      - httpApi:
+          path: /hello
+          method: get
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-${sls:stage}-Users
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: username
+            AttributeType: S
+        KeySchema:
+          - AttributeName: username
+            KeyType: HASH
+
+    PostsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-${sls:stage}-Posts
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+
+    CommentsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-${sls:stage}-Comments
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: postId
+            AttributeType: S
+          - AttributeName: createdAt
+            AttributeType: S
+        KeySchema:
+          - AttributeName: postId
+            KeyType: HASH
+          - AttributeName: createdAt
+            KeyType: RANGE
