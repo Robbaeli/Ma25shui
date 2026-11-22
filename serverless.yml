@@ -39,6 +39,13 @@ functions:
           path: /hello
           method: get
 
+  register:
+    handler: src/handlers/auth/register.handler
+    events:
+      - httpApi:
+          path: /auth/register
+          method: post
+
 resources:
   Resources:
     UsersTable:
