@@ -46,6 +46,15 @@ functions:
           path: /auth/register
           method: post
 
+  login:
+    handler: src/handlers/auth/login.handler
+    events:
+      - httpApi:
+          path: /auth/login
+          method: post
+
+  
+
 resources:
   Resources:
     UsersTable:
