@@ -6,6 +6,7 @@ import {
   savePost,
   deletePostById,
 } from "../repositories/postRepository.js";
+import { generateGuestName } from "../utils/guestName.js";
 
 export const getPosts = async (username) => {
   const posts = await getAllPosts();
@@ -23,13 +24,14 @@ export const getPost = async (postId) => {
   return post;
 };
 
-export const createPost = async ({ username, title, content }) => {
+export const createPost = async ({ user, title, content }) => {
   const now = new Date().toISOString();
+  const isGuest = !user;
 
   const post = {
     id: randomUUID(),
-    username,
-    isGuest: false,
+    username: isGuest ? generateGuestName() : user.username,
+    isGuest,
     title,
     content,
     createdAt: now,

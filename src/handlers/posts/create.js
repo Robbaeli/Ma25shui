@@ -1,5 +1,5 @@
 import middy from "@middy/core";
-import { auth } from "../../middlewares/auth.js";
+import { optionalAuth } from "../../middlewares/auth.js";
 import { validate } from "../../middlewares/validate.js";
 import { errorHandler } from "../../middlewares/errorHandler.js";
 import { postBodySchema } from "../../schemas/postSchemas.js";
@@ -8,7 +8,7 @@ import { sendResponse } from "../../utils/response.js";
 
 const create = async (event) => {
   const post = await createPost({
-    username: event.user.username,
+    user: event.user,
     ...event.body,
   });
 
@@ -19,6 +19,6 @@ const create = async (event) => {
 };
 
 export const handler = middy(create)
-  .use(auth())
+  .use(optionalAuth())
   .use(validate(postBodySchema))
   .use(errorHandler());
