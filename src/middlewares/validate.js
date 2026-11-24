@@ -1,4 +1,4 @@
-import { HttpError } from "../utils/HttpError.js";
+import { createError } from "@middy/util";
 
 export const validate = (schema) => ({
   before: async (request) => {
@@ -6,12 +6,12 @@ export const validate = (schema) => ({
     try {
       body = JSON.parse(request.event.body || "{}");
     } catch {
-      throw new HttpError(400, "Invalid JSON");
+      throw createError(400, "Invalid JSON");
     }
 
     const result = schema.safeParse(body);
     if (!result.success) {
-      throw new HttpError(400, result.error.issues[0].message);
+      throw createError(400, result.error.issues[0].message);
     }
 
     request.event.body = result.data;
