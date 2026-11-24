@@ -1,10 +1,10 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { createError } from "@middy/util";
 import {
   createUser,
   getUserByUsername,
 } from "../repositories/userRepository.js";
-import { HttpError } from "../utils/HttpError.js";
 
 export const registerUser = async ({ username, password }) => {
   const passwordHash = await bcrypt.hash(password, 10);
@@ -15,7 +15,7 @@ export const registerUser = async ({ username, password }) => {
     createdAt: new Date().toISOString(),
   });
 
-  if (!created) throw new HttpError(409, "Username is already taken");
+  if (!created) throw createError(409, "Username is already taken");
 
   return { username };
 };
@@ -26,7 +26,7 @@ export const loginUser = async ({ username, password }) => {
     user && (await bcrypt.compare(password, user.passwordHash));
 
   if (!passwordMatches) {
-    throw new HttpError(401, "Invalid username or password");
+    throw createError(401, "Invalid username or password");
   }
 
   const token = jwt.sign({ username: user.username }, process.env.JWT_SECRET, {
