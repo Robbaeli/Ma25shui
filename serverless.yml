@@ -65,7 +65,13 @@ functions:
       - httpApi:
           path: /posts/{postId}
           method: get
-  
+          
+  createPost:
+    handler: src/handlers/posts/create.handler
+    events:
+      - httpApi:
+          path: /posts
+          method: post  
 
 resources:
   Resources:

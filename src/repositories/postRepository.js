@@ -1,4 +1,4 @@
-import { GetCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
+import { GetCommand, PutCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { db } from "./client.js";
 
 const TABLE = process.env.POSTS_TABLE;
@@ -29,4 +29,13 @@ export const getPostById = async (id) => {
     }),
   );
   return result.Item;
+};
+
+export const savePost = async (post) => {
+  await db.send(
+    new PutCommand({
+      TableName: TABLE,
+      Item: post,
+    }),
+  );
 };
