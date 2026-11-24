@@ -1,4 +1,9 @@
-import { GetCommand, PutCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
+import {
+  DeleteCommand,
+  GetCommand,
+  PutCommand,
+  ScanCommand,
+} from "@aws-sdk/lib-dynamodb";
 import { db } from "./client.js";
 
 const TABLE = process.env.POSTS_TABLE;
@@ -36,6 +41,15 @@ export const savePost = async (post) => {
     new PutCommand({
       TableName: TABLE,
       Item: post,
+    }),
+  );
+};
+
+export const deletePostById = async (id) => {
+  await db.send(
+    new DeleteCommand({
+      TableName: TABLE,
+      Key: { id },
     }),
   );
 };

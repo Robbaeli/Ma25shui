@@ -4,6 +4,7 @@ import {
   getAllPosts,
   getPostById,
   savePost,
+  deletePostById,
 } from "../repositories/postRepository.js";
 
 export const getPosts = async (username) => {
@@ -37,4 +38,33 @@ export const createPost = async ({ username, title, content }) => {
 
   await savePost(post);
   return post;
+};
+
+const getOwnedPost = async (postId, username) => {
+  const post = await getPost(postId);
+
+  if (post.isGuest || post.username !== username) {
+    throw createError(403, "You are not allowed to modify this post");
+  }
+
+  return post;
+};
+
+export const updatePost = async ({ postId, username, title, content }) => {
+  const post = await getOwnedPost(postId, username);
+
+  const updatedPost = {
+    ...post,
+    title,
+    content,
+    updatedAt: new Date().toISOString(),
+  };
+
+  await savePost(updatedPost);
+  return updatedPost;
+};
+
+export const deletePost = async ({ postId, username }) => {
+  await getOwnedPost(postId, username);
+  await deletePostById(postId);
 };
