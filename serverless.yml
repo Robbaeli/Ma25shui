@@ -52,7 +52,19 @@ functions:
       - httpApi:
           path: /auth/login
           method: post
+  getPosts:
+    handler: src/handlers/posts/getAll.handler
+    events:
+      - httpApi:
+          path: /posts
+          method: get
 
+  getPost:
+    handler: src/handlers/posts/getById.handler
+    events:
+      - httpApi:
+          path: /posts/{postId}
+          method: get
   
 
 resources:
