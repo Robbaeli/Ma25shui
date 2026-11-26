@@ -189,6 +189,12 @@ Tre tabeller i DynamoDB:
 - **bcryptjs:** samma algoritm som bcrypt, men skriven i ren JavaScript. Den fungerar därför på Lambda utan att behöva byggas för Linux.
 - **Gästinlägg:** `optionalAuth` släpper igenom anrop utan token som gäster, men stoppar ogiltiga token med 401. Ägarkontrollen kräver `isGuest: false`, så gästinlägg kan aldrig ändras, även om en registrerad användare har samma namn.
 
+
 ## Testning
 
-API:et är testat i Postman mot den driftsatta miljön, med lyckade anrop och felfall för varje endpoint (400, 401, 403, 404 och 409).
+Repot innehåller en Postman-samling med 39 tester: `postman/Shui.postman_collection.json`.
+
+1. Postman → **Import** → välj filen
+2. Högerklicka på samlingen **Shui** → **Run collection** → **Run Shui**
+
+Testerna körs i ordning och täcker alla endpoints, både lyckade anrop och felfall (400, 401, 403, 404 och 409). Varje körning skapar nya testanvändare, så samlingen kan köras flera gånger. Byt `baseUrl` under **Variables** för att testa mot en annan deploy.
