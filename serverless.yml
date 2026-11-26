@@ -32,12 +32,7 @@ provider:
             - Fn::GetAtt: [CommentsTable, Arn]
 
 functions:
-  hello:
-    handler: src/handlers/hello.handler
-    events:
-      - httpApi:
-          path: /hello
-          method: get
+  
 
   register:
     handler: src/handlers/auth/register.handler
