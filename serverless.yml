@@ -85,7 +85,23 @@ functions:
       - httpApi:
           path: /posts
           method: post  
+  getComments:
+    handler: src/handlers/comments/getAll.handler
+    events:
+      - httpApi:
+          path: /posts/{postId}/comments
+          method: get
 
+  createComment:
+    handler: src/handlers/comments/create.handler
+    events:
+      - httpApi:
+          path: /posts/{postId}/comments
+          method: post
+          
+
+
+          
 resources:
   Resources:
     UsersTable:

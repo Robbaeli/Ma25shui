@@ -6,6 +6,7 @@ import {
   savePost,
   deletePostById,
 } from "../repositories/postRepository.js";
+import { deleteCommentsByPostId } from "../repositories/commentRepository.js";
 import { generateGuestName } from "../utils/guestName.js";
 
 export const getPosts = async (username) => {
@@ -68,5 +69,6 @@ export const updatePost = async ({ postId, username, title, content }) => {
 
 export const deletePost = async ({ postId, username }) => {
   await getOwnedPost(postId, username);
+  await deleteCommentsByPostId(postId);
   await deletePostById(postId);
 };
